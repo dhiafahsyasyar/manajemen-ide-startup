@@ -1,4 +1,4 @@
-```go id="0aw0g3"
+go id="0aw0g3"
 package main
 
 import "fmt"
