@@ -2,6 +2,8 @@ package main
 
 import "fmt"
 
+const MAXIDE = 100
+
 type Ide struct {
 	ID       int
 	Judul    string
@@ -9,7 +11,8 @@ type Ide struct {
 	Upvote   int
 }
 
-var daftarIde []Ide
+var daftarIde [MAXIDE]Ide
+var jumlahIde int
 
 func garis() {
 	fmt.Println("==========================================")
@@ -46,19 +49,23 @@ func tambahIde() {
 	fmt.Scanln(&kategori)
 
 	if judul == "" || kategori == "" {
-
 		fmt.Println("Input tidak boleh kosong.")
 		return
 	}
 
-	data := Ide{
-		ID:       len(daftarIde) + 1,
+	if jumlahIde >= MAXIDE {
+		fmt.Println("Kapasitas data penuh.")
+		return
+	}
+
+	daftarIde[jumlahIde] = Ide{
+		ID:       jumlahIde + 1,
 		Judul:    judul,
 		Kategori: kategori,
 		Upvote:   0,
 	}
 
-	daftarIde = append(daftarIde, data)
+	jumlahIde++
 
 	fmt.Println("Ide berhasil ditambahkan.")
 }
@@ -67,8 +74,7 @@ func tambahIde() {
 
 func tampilkanIde() {
 
-	if len(daftarIde) == 0 {
-
+	if jumlahIde == 0 {
 		fmt.Println("Belum ada data ide.")
 		return
 	}
@@ -80,13 +86,13 @@ func tampilkanIde() {
 
 	garis()
 
-	for _, ide := range daftarIde {
+	for i := 0; i < jumlahIde; i++ {
 
 		fmt.Printf("%-5d %-20s %-15s %-10d\n",
-			ide.ID,
-			ide.Judul,
-			ide.Kategori,
-			ide.Upvote)
+			daftarIde[i].ID,
+			daftarIde[i].Judul,
+			daftarIde[i].Kategori,
+			daftarIde[i].Upvote)
 	}
 
 	garis()
@@ -101,7 +107,7 @@ func upvoteIde() {
 	fmt.Print("Masukkan ID ide: ")
 	fmt.Scanln(&id)
 
-	for i := range daftarIde {
+	for i := 0; i < jumlahIde; i++ {
 
 		if daftarIde[i].ID == id {
 
@@ -126,16 +132,15 @@ func sequentialSearch() {
 	fmt.Print("Masukkan judul ide: ")
 	fmt.Scanln(&cari)
 
-	for _, ide := range daftarIde {
+	for i := 0; i < jumlahIde; i++ {
 
-		if ide.Judul == cari {
+		if daftarIde[i].Judul == cari {
 
 			fmt.Println("\nData ditemukan:")
-			fmt.Println("ID  :", ide.ID)
-			fmt.Println("Judul :", ide.Judul)
-			fmt.Println("Kategori :", ide.Kategori)
-			fmt.Println("Upvote :", ide.Upvote )
-
+			fmt.Println("ID       :", daftarIde[i].ID)
+			fmt.Println("Judul    :", daftarIde[i].Judul)
+			fmt.Println("Kategori :", daftarIde[i].Kategori)
+			fmt.Println("Upvote   :", daftarIde[i].Upvote)
 
 			found = true
 		}
@@ -157,7 +162,7 @@ func binarySearch() {
 	fmt.Scanln(&cari)
 
 	left := 0
-	right := len(daftarIde) - 1
+	right := jumlahIde - 1
 
 	for left <= right {
 
@@ -166,11 +171,11 @@ func binarySearch() {
 		if daftarIde[mid].Judul == cari {
 
 			fmt.Println("\nData ditemukan:")
-			fmt.Println("ID  :", daftarIde[mid].ID)
-			fmt.Println("Judul :", daftarIde[mid].Judul)
+			fmt.Println("ID       :", daftarIde[mid].ID)
+			fmt.Println("Judul    :", daftarIde[mid].Judul)
 			fmt.Println("Kategori :", daftarIde[mid].Kategori)
-			fmt.Println("Upvote :", daftarIde[mid].Upvote )
-			
+			fmt.Println("Upvote   :", daftarIde[mid].Upvote)
+
 			return
 
 		} else if daftarIde[mid].Judul < cari {
@@ -190,13 +195,11 @@ func binarySearch() {
 
 func selectionSort() {
 
-	n := len(daftarIde)
-
-	for i := 0; i < n-1; i++ {
+	for i := 0; i < jumlahIde-1; i++ {
 
 		max := i
 
-		for j := i + 1; j < n; j++ {
+		for j := i + 1; j < jumlahIde; j++ {
 
 			if daftarIde[j].Upvote > daftarIde[max].Upvote {
 				max = j
@@ -211,9 +214,10 @@ func selectionSort() {
 }
 
 // ================= INSERTION SORT =================
+
 func insertionSort() {
 
-	for i := 1; i < len(daftarIde); i++ {
+	for i := 1; i < jumlahIde; i++ {
 
 		temp := daftarIde[i]
 		j := i - 1
@@ -231,11 +235,12 @@ func insertionSort() {
 }
 
 // ================= SORT JUDUL =================
+
 func sortJudul() {
 
-	for i := 0; i < len(daftarIde)-1; i++ {
+	for i := 0; i < jumlahIde-1; i++ {
 
-		for j := i + 1; j < len(daftarIde); j++ {
+		for j := i + 1; j < jumlahIde; j++ {
 
 			if daftarIde[i].Judul > daftarIde[j].Judul {
 
@@ -250,11 +255,11 @@ func sortJudul() {
 
 func main() {
 
-	daftarIde = append(daftarIde,
-		Ide{1, "EcoTrack", "Lingkungan", 10},
-		Ide{2, "FoodHub", "Kuliner", 7},
-		Ide{3, "HealthSync", "Kesehatan", 15},
-	)
+	daftarIde[0] = Ide{1, "EcoTrack", "Lingkungan", 10}
+	daftarIde[1] = Ide{2, "FoodHub", "Kuliner", 7}
+	daftarIde[2] = Ide{3, "HealthSync", "Kesehatan", 15}
+
+	jumlahIde = 3
 
 	var pilih int
 
