@@ -43,10 +43,10 @@ func tambahIde() {
 	var judul, kategori string
 
 	fmt.Print("Masukkan Judul ide     : ")
-	fmt.Scanln(&judul)
+	fmt.Scan(&judul)
 
 	fmt.Print("Masukkan Kategori ide  : ")
-	fmt.Scanln(&kategori)
+	fmt.Scan(&kategori)
 
 	if judul == "" || kategori == "" {
 		fmt.Println("Input tidak boleh kosong.")
@@ -106,7 +106,10 @@ func upvoteIde() {
 
 	fmt.Print("Masukkan ID ide: ")
 	fmt.Scanln(&id)
-
+	if id <= 0 {
+		fmt.Println("ID tidak valid.")
+		return
+	}
 	for i := 0; i < jumlahIde; i++ {
 
 		if daftarIde[i].ID == id {
@@ -125,9 +128,7 @@ func upvoteIde() {
 
 // Sequential Search
 func sequentialSearch() {
-
 	var cari string
-	found := false
 
 	fmt.Print("Masukkan judul ide: ")
 	fmt.Scanln(&cari)
@@ -141,29 +142,26 @@ func sequentialSearch() {
 			fmt.Println("Judul    :", daftarIde[i].Judul)
 			fmt.Println("Kategori :", daftarIde[i].Kategori)
 			fmt.Println("Upvote   :", daftarIde[i].Upvote)
-
-			found = true
+			return
 		}
 	}
-
-	if !found {
-		fmt.Println("Data tidak ditemukan.")
-	}
+	fmt.Println("Data tidak ditemukan.")
 }
 
 // Binary Search
 func binarySearch() {
-
-	sortJudul()
-
 	var cari string
+	sortJudul()
 
 	fmt.Print("Cari judul ide: ")
 	fmt.Scanln(&cari)
 
 	left := 0
 	right := jumlahIde - 1
-
+	if jumlahIde == 0 {
+		fmt.Println("Belum ada data ide.")
+		return
+	}
 	for left <= right {
 
 		mid := (left + right) / 2
@@ -194,7 +192,10 @@ func binarySearch() {
 // ================= SELECTION SORT =================
 
 func selectionSort() {
-
+	if jumlahIde < 2 {
+		fmt.Println("Data tidak perlu diurutkan.")
+		return
+	}
 	for i := 0; i < jumlahIde-1; i++ {
 
 		max := i
@@ -216,7 +217,10 @@ func selectionSort() {
 // ================= INSERTION SORT =================
 
 func insertionSort() {
-
+	if jumlahIde < 2 {
+		fmt.Println("Data tidak perlu diurutkan.")
+		return
+	}
 	for i := 1; i < jumlahIde; i++ {
 
 		temp := daftarIde[i]
